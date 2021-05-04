@@ -1,5 +1,7 @@
-# **Chess AI (name will most likely change)** #
+# Chess AI (Name in Progress) #
 
-In progress project to help me with practicing openings and tactics.
+A project to help me with practicing openings and tactics.
+## Helpful Commands ##
+``go run build -o ./build``
 
-_Currently, the core engine is in progress._
+``go run chess-ai``
