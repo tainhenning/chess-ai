@@ -1,8 +1,12 @@
-package main
+package core
 
 import (
 	"testing"
 )
+
+func TestPawnMovement(t *testing.T) {
+
+}
 
 func TestBoardInitialization(t *testing.T) {
 	t.Run("Check Board Setup", func(t *testing.T) {

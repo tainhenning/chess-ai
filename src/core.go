@@ -1,4 +1,4 @@
-package main
+package core
 
 import (
 	"fmt"
@@ -17,29 +17,9 @@ type Piece struct {
 	isWhite bool
 }
 
-var fileMap = map[rune]int{
-	'a': 0,
-	'b': 1,
-	'c': 2,
-	'd': 3,
-	'e': 4,
-	'f': 5,
-	'g': 6,
-	'h': 7,
-}
-
 var board [8][8]rune
-
 var white [16]Piece
 var black [16]Piece
-
-func appendLegalMove(moves []Square, movement Square) []Square {
-	if board[movement.rank][fileMap[movement.file]] == 'x' {
-		moves = append(moves, movement)
-		return moves
-	}
-	return moves
-}
 
 func listLegalMoves(p Piece) []Square {
 	legalMoves := []Square{}
@@ -87,15 +67,6 @@ func initializeBoard() {
 		f := fileMap[black[j].square.file]
 		r := black[j].square.rank
 		board[r][f] = black[j].name
-	}
-}
-
-func printBoard() {
-	for i := 0; i < 8; i++ {
-		for j := 0; j < 8; j++ {
-			fmt.Print(string(board[i][j]), " ")
-		}
-		fmt.Print("\n")
 	}
 }
 
