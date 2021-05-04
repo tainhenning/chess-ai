@@ -1,74 +1,7 @@
 package core
 
-import (
-	"fmt"
-)
-
-// Square represents a position on the board
-type Square struct {
-	file rune
-	rank int
-}
-
-// Piece represents the piece
-type Piece struct {
-	name    rune
-	square  Square
-	isWhite bool
-}
-
-var board [8][8]rune
 var white [16]Piece
 var black [16]Piece
-
-func listLegalMoves(p Piece) []Square {
-	legalMoves := []Square{}
-	switch name := p.name; name {
-	case 'p':
-		var movement Square
-		if p.square.rank == 1 && p.isWhite {
-			movement = Square{p.square.file, p.square.rank + 2}
-		} else if p.square.rank == 7 && !p.isWhite {
-			movement = Square{p.square.file, p.square.rank - 2}
-		}
-
-		if board[movement.rank][fileMap[movement.file]] == 'x' && board[movement.rank-1][fileMap[movement.file]] == 'x' {
-			legalMoves = append(legalMoves, movement)
-		}
-
-		if p.isWhite {
-			movement = Square{p.square.file, p.square.rank + 1}
-		} else {
-			movement = Square{p.square.file, p.square.rank - 1}
-		}
-
-		if board[movement.rank][fileMap[movement.file]] == 'x' {
-			legalMoves = append(legalMoves, movement)
-		}
-	}
-	return legalMoves
-}
-
-func initializeBoard() {
-
-	for k := 0; k < 8; k++ {
-		for l := 0; l < 8; l++ {
-			board[k][l] = 'x'
-		}
-	}
-
-	for i := 0; i < len(white); i++ {
-		f := fileMap[white[i].square.file]
-		r := white[i].square.rank
-		board[r][f] = white[i].name
-	}
-
-	for j := 0; j < len(black); j++ {
-		f := fileMap[black[j].square.file]
-		r := black[j].square.rank
-		board[r][f] = black[j].name
-	}
-}
 
 func initializePlayers() {
 	whiteRank := 0
@@ -109,9 +42,22 @@ func initializePlayers() {
 	black[15] = Piece{'P', Square{'h', blackRank - 1}, false}
 }
 
-func main() {
-	initializePlayers()
-	initializeBoard()
-	printBoard()
-	fmt.Println(listLegalMoves(white[14]))
+// White gets white pieces
+func White() [16]Piece {
+	return white
+}
+
+// SetWhite sets white pieces
+func SetWhite(w [16]Piece) {
+	white = w
+}
+
+// Black gets black pieces
+func Black() [16]Piece {
+	return black
+}
+
+// SetBlack sets black pieces
+func SetBlack(b [16]Piece) {
+	black = b
 }
