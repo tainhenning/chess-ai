@@ -6,6 +6,7 @@ var Black [16]Piece
 func InitializePlayers() {
 	whiteRank := 0
 	blackRank := 7
+	// TODO: Better way of getting to each piece than random int
 	White[0] = Piece{Name: "K", Square: Square{File: 4, Rank: whiteRank}, IsWhite: true}
 	White[1] = Piece{Name: "Q", Square: Square{File: 3, Rank: whiteRank}, IsWhite: true}
 	White[2] = Piece{Name: "B", Square: Square{File: 2, Rank: whiteRank}, IsWhite: true}

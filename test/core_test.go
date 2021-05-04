@@ -3,6 +3,7 @@ package test
 import (
 	"chess-ai/core"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"testing"
@@ -12,12 +13,56 @@ type game struct {
 	Board [8][8]string `json:"board"`
 }
 
+func loadBoard(filePath string) [8][8]string {
+	var resource game
+	jsonFile, err := os.Open(filePath)
+	if err != nil {
+		fmt.Println("failed to open JSON file")
+		return resource.Board
+	}
+	byteValue, _ := ioutil.ReadAll(jsonFile)
+	if err2 := json.Unmarshal(byteValue, &resource); err2 != nil {
+		fmt.Printf("Unmarshal: %v\n", err)
+		return resource.Board
+	}
+	defer func(jsonFile *os.File) {
+		err := jsonFile.Close()
+		if err != nil {
+			fmt.Println("Failed to close JSON")
+		}
+	}(jsonFile)
+	return resource.Board
+}
+
 func TestPawnMovement(t *testing.T) {
+	// TODO: Compare individual moves
 	t.Run("Check Pawn movement options", func(t *testing.T) {
 		core.InitializePlayers()
 		core.LoadBoard()
-		var ans = core.White[12].LegalPawnMoves()
+		var ans = core.White[12].CheckLegalMoves()
 		var expected = []int {0, 1}
+		if len(ans) != len(expected) {
+			t.Errorf("got %d, want %d", ans, expected)
+			return
+		}
+	})
+
+	t.Run("Check Knight movement options", func(t *testing.T) {
+		core.InitializePlayers()
+		core.LoadBoard()
+		var ans = core.White[4].CheckLegalMoves()
+		var expected = []int {0, 1}
+		if len(ans) != len(expected) {
+			t.Errorf("got %d, want %d", ans, expected)
+			return
+		}
+	})
+
+	t.Run("Check non pawn with pawn movement options", func(t *testing.T) {
+		core.InitializePlayers()
+		core.LoadBoard()
+		var ans = core.White[0].CheckLegalMoves()
+		var expected []int
 		if len(ans) != len(expected) {
 			t.Errorf("got %d, want %d", ans, expected)
 			return
@@ -52,28 +97,8 @@ func TestBoardInitialization(t *testing.T) {
 		core.InitializePlayers()
 		core.LoadBoard()
 		// TODO: This is confusing because the board is currently being printed in black's perspective
-
-		jsonFile, err := os.Open("./resources/pawn_movement_test.json")
-		if err != nil {
-			t.Errorf("Failed to open JSON file!")
-			return
-		}
-
-		byteValue, _ := ioutil.ReadAll(jsonFile)
-		var resource game
-		if err2 := json.Unmarshal(byteValue, &resource); err2 != nil {
-			t.Errorf("Unmarshal: %v\n", err)
-		}
-		defer func(jsonFile *os.File) {
-			err := jsonFile.Close()
-			if err != nil {
-				t.Errorf("Failed to close JSON")
-				return
-			}
-		}(jsonFile)
-
 		var ans = core.Board
-		var expected = resource.Board
+		var expected = loadBoard("./resources/pawn_movement_test.json")
 		if ans != expected {
 			t.Errorf("got \n %s, want \n %s", ans, expected)
 			return
