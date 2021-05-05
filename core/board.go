@@ -2,7 +2,7 @@ package core
 
 var Board [8][8]string
 
-func LoadBoard() {
+func InitializeBoard() {
 
 	for k := 0; k < 8; k++ {
 		for l := 0; l < 8; l++ {
