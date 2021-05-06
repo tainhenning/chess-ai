@@ -12,19 +12,11 @@ type Piece struct {
 var pawnMoves = 2
 var knightMoves = 8
 
-func (p *Piece) moveFile(m int) {
-	p.Square.File += m
-}
-
-func (p *Piece) moveRank(m int) {
-	p.Square.Rank += m
-}
-
 func (p *Piece) CheckLegalMoves() []Square {
 	// TODO: Potential bottleneck with ToLower
 	switch name := strings.ToLower(p.Name); name {
 	case "p":
-		return p.legalPawnMoves(pawnMoves)
+		return legalPawnMoves(pawnMoves, p.Square, p.IsWhite)
 	case "n":
 		return p.legalKnightMoves(knightMoves)
 	case "b":
@@ -33,12 +25,12 @@ func (p *Piece) CheckLegalMoves() []Square {
 	return []Square {}
 }
 
-func (p *Piece) legalPawnMoves(moveLimit int) []Square {
+func legalPawnMoves(moveLimit int, s Square, c bool) []Square {
 	var legalMoves []Square
 	var nullMove = Square{}
 
 	for i := 0; i < moveLimit; i++ {
-		move := p.checkPawnMoveLegality(i)
+		move := checkPawnMoveLegality(i, s, c)
 		if move != nullMove {
 			legalMoves = append(legalMoves, move)
 		}
@@ -143,27 +135,27 @@ func (p *Piece) checkKnightMoveLegality(option int) Square {
 	return Square{}
 }
 
-func (p *Piece) checkPawnMoveLegality(option int) Square {
+func checkPawnMoveLegality(option int, s Square, c bool) Square {
 	colorMod := 1
-	if !p.IsWhite {
+	if !c {
 		colorMod = -1
 	}
 	switch o := option; o {
 	case 0:
-		if Board[p.Square.Rank + colorMod][p.Square.File] == "x" {
-			return Square{p.Square.File, p.Square.Rank + colorMod}
+		if Board[s.Rank + colorMod][s.File] == "x" {
+			return Square{s.File, s.Rank + colorMod}
 		}
 	case 1:
-		if Board[p.Square.Rank + (2*colorMod)][p.Square.File] == "x" {
-			return Square{p.Square.File, p.Square.Rank + (2 * colorMod)}
+		if Board[s.Rank + (2*colorMod)][s.File] == "x" {
+			return Square{s.File, s.Rank + (2 * colorMod)}
 		}
 	case 2:
-		if Board[p.Square.Rank + colorMod][p.Square.File - 1] != "x" {
-			return Square{p.Square.File - 1, p.Square.Rank + colorMod}
+		if Board[s.Rank + colorMod][s.File - 1] != "x" {
+			return Square{s.File - 1, s.Rank + colorMod}
 		}
 	case 3:
-		if Board[p.Square.Rank + colorMod][p.Square.File + 1] != "x" {
-			return Square{p.Square.File + 1, p.Square.Rank + colorMod}
+		if Board[s.Rank + colorMod][s.File + 1] != "x" {
+			return Square{s.File + 1, s.Rank + colorMod}
 		}
 	}
 	return Square{}

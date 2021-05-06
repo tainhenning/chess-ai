@@ -34,7 +34,7 @@ func loadBoard(filePath string) [8][8]string {
 	return resource.Board
 }
 
-func TestPawnMovement(t *testing.T) {
+func TestPieceMovement(t *testing.T) {
 	// TODO: Compare individual moves
 	t.Run("Check Pawn movement options", func(t *testing.T) {
 		core.InitializePlayers()
